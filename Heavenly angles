@@ -1,0 +1,9 @@
+def angular_dist(ra1, dec1, ra2, dec2):
+  ra1_rad = np.radians(ra1)
+  dec1_rad = np.radians(dec1)
+  ra2_rad = np.radians(ra2)
+  dec2_rad = np.radians(dec2)
+  b = np.cos(dec1_rad)*np.cos(dec2_rad)*np.sin(np.abs(ra1_rad - ra2_rad)/2)**2
+  a = (np.sin(abs(dec1_rad-dec2_rad)/2))**2
+  d = 2*np.arcsin(np.sqrt(a + b))
+  return np.degrees(d)
