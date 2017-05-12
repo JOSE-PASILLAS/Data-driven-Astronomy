@@ -1,0 +1,72 @@
+import numpy as np
+
+def hms2dec(h,m,s):
+  right_ascension=15*(h+m/60+s/60/60)
+  return right_ascension
+
+def dms2dec(d,a_m,a_s):
+  if np.sign(d)==-1:
+    declination=(d*-1+a_m/60+a_s/(60*60))*-1
+  else:
+    declination=d+a_m/60+a_s/(60*60)
+  return declination
+
+def import_bss():
+  cat = np.loadtxt('bss.dat', usecols=range(1, 7))
+  for i in range(0, len(cat)):
+    right_ascension=hms2dec(cat[i,0],cat[i,1],cat[i,2])
+    declination=dms2dec(cat[i,3],cat[i,4],cat[i,5])
+    tup=i+1,right_ascension,declination
+    if i==0:
+      lst=[tup]
+    else:
+      lst+=[tup]
+  return lst
+
+def import_super():
+  cat =  np.loadtxt('super.csv', delimiter=',', skiprows=1, usecols=[0, 1])
+  for i in range(0, len(cat)):
+    right_ascension=cat[i,0]
+    declination=cat[i,1]
+    tup=i+1,right_ascension,declination
+    if i==0:
+      lst=[tup]
+    else:
+      lst+=[tup]
+  return lst
+
+def angular_dist(ra1, dec1, ra2, dec2):
+  ra1_rad = np.radians(ra1)
+  dec1_rad = np.radians(dec1)
+  ra2_rad = np.radians(ra2)
+  dec2_rad = np.radians(dec2)
+  b = np.cos(dec1_rad)*np.cos(dec2_rad)*np.sin(np.abs(ra1_rad - ra2_rad)/2)**2
+  a = (np.sin(abs(dec1_rad-dec2_rad)/2))**2
+  d = 2*np.arcsin(np.sqrt(a + b))
+  return np.degrees(d)
+
+def find_closest(cat,asc,dec):
+  min_dist=1000
+  min_index=0
+  for i in range(0,len(cat)):
+    dist=angular_dist(cat[i][1], cat[i][2], asc, dec)
+    if dist<min_dist:
+      min_dist=dist
+      min_index=cat[i][0]
+  tup=min_index,min_dist
+  return tup
+
+
+
+def crossmatch(bss_cat, super_cat, max_dist):
+  matches=[]
+  non_matches=[]
+  for i in range(0,len(bss_cat)):
+    closest=find_closest(super_cat,bss_cat[i][1],bss_cat[i][2])
+    if (closest[1]<=max_dist):
+      tup=bss_cat[i][0],closest[0],closest[1]
+      matches+=[tup]
+    else:
+      tup2=[bss_cat[i][0]]
+      non_matches+=tup2
+  return matches,non_matches
