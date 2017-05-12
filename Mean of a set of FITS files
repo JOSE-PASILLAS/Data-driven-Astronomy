@@ -1,0 +1,15 @@
+import numpy as np
+from astropy.io import fits
+
+def mean_fits(file_list):
+  for x in range(0,len(file_list)):
+    if x==0:
+       hdulist = fits.open(file_list[x])
+       data = hdulist[0].data
+    else:
+       hdulist = fits.open(file_list[x])
+       data =data + hdulist[0].data
+  data=data/len(file_list)
+
+  return(data)
+  
