@@ -1,0 +1,24 @@
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Complete the following to make the plot
+if __name__ == "__main__":
+    data = np.load('sdss_galaxy_colors.npy')
+    # Get a colour map
+    cmap = plt.get_cmap('YlOrRd')
+
+    # Define our colour indexes u-g and r-i
+    features = np.zeros((data.shape[0], 2))
+    features[:, 0] = data['u'] - data['g']
+    features[:, 1] = data['r'] - data['i']
+    # Make a redshift array
+    labels=data['redshift']
+    # Create the plot with plt.scatter and plt.colorbar
+    plt.scatter(features[:, 0],features[:, 1],c=labels,s=1,lw=0,cmap=cmap)
+    cbar = plt.colorbar();   
+    cbar.set_label('Redshift')
+    # Define your axis labels and plot title
+
+    # Set any axis limits
+
+    plt.show()
