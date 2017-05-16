@@ -1,7 +1,8 @@
 # Data-driven-Astronomy
 # University of Syndey 
+# Python. SQL
 
-Python
+
 
 Features
 Colour indices are the same colours (u-g, g-r, r-i, and i-z) we used for regression. Studies of galaxy evolution tell us that spiral galaxies have younger star populations and therefore are 'bluer' (brighter at lower wavelengths). Elliptical galaxies have an older star population and are brighter at higher wavelengths ('redder').
